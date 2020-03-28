@@ -9,13 +9,14 @@ class Ticket
     @id = options['id'].to_i if options['id']
     @customer_id = options['customer_id']
     @film_id = options['film_id']
+    @screening_id = options['screening_id']
   end
 
   def save
-    sql = "INSERT INTO tickets (customer_id, film_id)
-           VALUES ($1, $2)
+    sql = "INSERT INTO tickets (customer_id, film_id, screening_id)
+           VALUES ($1, $2, $3)
            RETURNING *"
-    values = [@customer_id, @film_id]
+    values = [@customer_id, @film_id, @screening_id]
     @id = SqlRunner.run(sql, values)[0]['id'].to_i
     buy_ticket()
   end
@@ -45,6 +46,20 @@ class Ticket
     customer.update
   end
 
+  def update_tickets_total
+    screening = screening()
+    if screening.capacity > screening.tickets_sold
+      screening.tickets_sold += 1
+      screening.update
+  end
+
+  def screening
+    sql = "SELECT * FROM screenings
+           WHERE id = $1"
+    values = [@screening_id]
+    return SqlRunner.run(sql, values)[0]
+  end
+
   def customer
     sql = "SELECT * FROM customers
            WHERE id = $1"
@@ -68,9 +83,5 @@ class Ticket
     result = ticket_data.map {|ticket| Ticket.new(ticket)}
     return result
   end
-
-  # class v
-
-
 
 end

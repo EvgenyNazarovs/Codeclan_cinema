@@ -74,6 +74,14 @@ class Film
     return screenings.map {|screening| screening.showing_time}
   end
 
+  def find_most_popular_screening
+    screenings = screenings()
+    result = screenings.max_by {|screening| screening.number_of_tickets}
+  end
+
+  # Write a method that finds out what is the most
+  # popular time (most tickets sold) for a given film
+
 
 
 end

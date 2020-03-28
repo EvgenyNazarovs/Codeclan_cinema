@@ -29,12 +29,26 @@ customer2.name = 'Chris'
 customer2.update
 customer3.save
 
-ticket1 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film1.id})
-ticket2 = Ticket.new({'customer_id' => customer2.id, 'film_id' => film2.id})
-ticket3 = Ticket.new({'customer_id' => customer3.id, 'film_id' => film3.id})
-ticket4 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film4.id})
-ticket5 = Ticket.new({'customer_id' => customer3.id, 'film_id' => film2.id})
-ticket6 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film1.id})
+screening1 = Screening.new({'film_id' => film1.id, 'showing_time' => '15:00', 'capacity' => 50})
+screening2 = Screening.new({'film_id' => film1.id, 'showing_time' => '18:00', 'capacity' => 50})
+screening3 = Screening.new({'film_id' => film1.id, 'showing_time' => '21:00', 'capacity' => 25})
+screening4 = Screening.new({'film_id' => film2.id, 'showing_time' => '19:30', 'capacity' => 25})
+screening5 = Screening.new({'film_id' => film3.id, 'showing_time' => '18:00', 'capacity' => 25})
+screening6 = Screening.new({'film_id' => film4.id, 'showing_time' => '20:00', 'capacity' => 25})
+
+screening1.save
+screening2.save
+screening3.save
+screening4.save
+screening5.save
+screening6.save
+
+ticket1 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film1.id, 'screening_id' => screening1.id})
+ticket2 = Ticket.new({'customer_id' => customer2.id, 'film_id' => film2.id, 'screening_id' => screening4.id})
+ticket3 = Ticket.new({'customer_id' => customer3.id, 'film_id' => film3.id, 'screening_id' => screening5.id})
+ticket4 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film4.id, 'screening_id' => screening6.id})
+ticket5 = Ticket.new({'customer_id' => customer3.id, 'film_id' => film2.id, 'screening_id' => screening4.id})
+ticket6 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film1.id, 'screening_id' => screening1.id})
 
 ticket1.save
 ticket2.save
@@ -42,14 +56,6 @@ ticket3.save
 ticket4.save
 ticket5.save
 ticket6.save
-
-screening1 = Screening.new({'film_id' => film1.id, 'showing_time' => '15:00', 'capacity' => 50})
-screening2 = Screening.new({'film_id' => film1.id, 'showing_time' => '18:00', 'capacity' => 50})
-screening3 = Screening.new({'film_id' => film1.id, 'showing_time' => '21:00', 'capacity' => 25})
-
-screening1.save
-screening2.save
-screening3.save
 
 binding.pry
 nil
