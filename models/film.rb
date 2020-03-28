@@ -29,6 +29,12 @@ class Film
     return Customer.map_items(customers)
   end
 
+  # checks the number of customers per film
+
+  def number_of_customers
+    return customers().size
+  end
+
   def self.delete_all
     sql = "DELETE FROM films"
     SqlRunner.run(sql)
