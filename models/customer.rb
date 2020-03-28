@@ -38,6 +38,25 @@ class Customer
     return Ticket.map_items(results)
   end
 
+  # checks how many tickets were bought by a customer
+
+  def number_of_tickets
+    result = tickets()
+    return result.size
+  end
+
+  def number_of_tickets_per_film(film_id)
+
+    sql = "SELECT tickets.* from tickets
+           WHERE tickets.film_id = $1
+           AND tickets.customer_id = $2"
+    values = [film_id, @id]
+    results = SqlRunner.run(sql, values)
+    return nil if results.first == nil
+    return Ticket.map_items(results).size
+  end
+
+
   def self.delete_all
     sql = "DELETE FROM customers"
     SqlRunner.run(sql)
