@@ -59,6 +59,21 @@ class Film
     return result
   end
 
+  # write a method that gives us all showings times per film
+
+  def screenings
+    sql = "SELECT * FROM screenings
+           WHERE film_id = $1"
+    values = [@id]
+    screenings = SqlRunner.run(sql, values)
+    return Screening.map_items(screenings)
+  end
+
+  def show_times
+    screenings = screenings()
+    return screenings.map {|screening| screening.showing_time}
+  end
+
 
 
 end
