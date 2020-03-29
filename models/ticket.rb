@@ -14,6 +14,9 @@ class Ticket
 
   # CRUD methods
 
+  # save method checks that the screening has capacity
+  # and updates customer wallet at the end
+
   def save
     if screening_has_capacity?()
       sql = "INSERT INTO tickets (customer_id, film_id, screening_id)
@@ -62,23 +65,15 @@ class Ticket
 
   def price
     result = film()
-    return film.price
+    return film.price.to_i
   end
 
   def sell_ticket
     customer = customer()
-    price = price().to_i
+    price = price()
     customer.funds = customer.funds.to_i - price
     customer.update
   end
-
-  # def update_tickets_total
-  #   screening = screening()
-  #   if screening.capacity.to_i > screening.tickets_sold
-  #     screening.tickets_sold += 1
-  #     screening.update
-  #   end
-  # end
 
   def screening
     sql = "SELECT * FROM screenings

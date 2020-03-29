@@ -13,8 +13,8 @@ class Screening
   end
 
   def save
-    sql = "INSERT INTO screenings (film_id, showing_time, capacity, tickets_sold)
-           VALUES ($1, $2, $3, $4)
+    sql = "INSERT INTO screenings (film_id, showing_time, capacity)
+           VALUES ($1, $2, $3)
            RETURNING *"
     values = [@film_id, @showing_time, @capacity]
     @id = SqlRunner.run(sql, values)[0]['id'].to_i
@@ -22,9 +22,9 @@ class Screening
 
   def update
     sql = "UPDATE screenings
-           SET (film_id, showing_time, capacity, tickets_sold) = ($1, $2, $3, $4)
-           WHERE id = $5"
-    values = [@film_id, @showing_time, @capacity, @tickets_sold, @id]
+           SET (film_id, showing_time, capacity) = ($1, $2, $3)
+           WHERE id = $4"
+    values = [@film_id, @showing_time, @capacity, @id]
     SqlRunner.run(sql, values)
   end
 
@@ -38,7 +38,7 @@ class Screening
     SqlRunner.run(sql)
   end
 
-  # write a method that will give us all tickets per screening
+  # returns all tickets per screening
 
   def tickets
     sql = "SELECT * FROM tickets

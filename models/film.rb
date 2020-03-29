@@ -65,11 +65,6 @@ class Film
     return customers().size
   end
 
-  def self.map_items(film_data)
-    result = film_data.map {|film| Film.new(film)}
-    return result
-  end
-
   def screenings
     sql = "SELECT * FROM screenings
            WHERE film_id = $1"
@@ -90,6 +85,11 @@ class Film
   def find_most_popular_screening
     screenings = screenings()
     result = screenings.max_by {|screening| screening.number_of_tickets}
+  end
+
+  def self.map_items(film_data)
+    result = film_data.map {|film| Film.new(film)}
+    return result
   end
 
 end

@@ -24,7 +24,7 @@ class Customer
   def self.all
     sql = "SELECT * FROM customers"
     customers = SqlRunner.run(sql)
-    return Customer.map_item(customers)
+    return Customer.map_items(customers)
   end
 
   def update
