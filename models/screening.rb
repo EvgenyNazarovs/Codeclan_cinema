@@ -2,7 +2,7 @@ require_relative('../db/sql_runner')
 
 class Screening
 
-  attr_accessor :showing_time, :film_id, :capacity, :tickets_sold
+  attr_accessor :showing_time, :film_id, :capacity
   attr_reader :id
 
   def initialize(options)
@@ -10,14 +10,13 @@ class Screening
     @film_id = options['film_id']
     @showing_time = options['showing_time']
     @capacity = options['capacity']
-    @tickets_sold = 0
   end
 
   def save
     sql = "INSERT INTO screenings (film_id, showing_time, capacity, tickets_sold)
            VALUES ($1, $2, $3, $4)
            RETURNING *"
-    values = [@film_id, @showing_time, @capacity, @tickets_sold]
+    values = [@film_id, @showing_time, @capacity]
     @id = SqlRunner.run(sql, values)[0]['id'].to_i
   end
 
@@ -54,9 +53,9 @@ class Screening
     return tickets.size
   end
 
-  def enough_capacity?
+  def available_tickets
     tickets = number_of_tickets()
-    return true if @capacity > tickets
-    end
+    return @capacity - tickets
+  end
 
 end

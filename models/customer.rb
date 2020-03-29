@@ -11,6 +11,8 @@ class Customer
     @funds = options['funds']
   end
 
+  # CRUD methods
+
   def save
     sql = "INSERT INTO customers (name, funds)
            VALUES ($1, $2)
@@ -18,6 +20,34 @@ class Customer
     values = [@name, @funds]
     @id = SqlRunner.run(sql, values)[0]['id'].to_i
   end
+
+  def self.all
+    sql = "SELECT * FROM customers"
+    customers = SqlRunner.run(sql)
+    return Customer.map_item(customers)
+  end
+
+  def update
+    sql = "UPDATE customers
+           SET (name, funds) = ($1, $2)
+           WHERE id = $3"
+    values = [@name, @funds, @id]
+    SqlRunner.run(sql, values)
+  end
+
+  def self.delete_all
+    sql = "DELETE FROM customers"
+    SqlRunner.run(sql)
+  end
+
+  def delete
+    sql = "DELETE FROM customers
+           WHERE id = $1"
+    values =[@id]
+    SqlRunner.run(sql, values)
+  end
+
+  # shows which films a customer booked to see
 
   def films
     sql = "SELECT films.* FROM films
@@ -43,37 +73,6 @@ class Customer
   def number_of_tickets
     result = tickets()
     return result.size
-  end
-
-  def number_of_tickets_per_film(film_id)
-
-    sql = "SELECT tickets.* from tickets
-           WHERE tickets.film_id = $1
-           AND tickets.customer_id = $2"
-    values = [film_id, @id]
-    results = SqlRunner.run(sql, values)
-    return nil if results.first == nil
-    return Ticket.map_items(results).size
-  end
-
-
-  def self.delete_all
-    sql = "DELETE FROM customers"
-    SqlRunner.run(sql)
-  end
-
-  def self.all
-    sql = "SELECT * FROM customers"
-    customers = SqlRunner.run(sql)
-    return Customer.map_item(customers)
-  end
-
-  def update
-    sql = "UPDATE customers
-           SET (name, funds) = ($1, $2)
-           WHERE id = $3"
-    values = [@name, @funds, @id]
-    SqlRunner.run(sql, values)
   end
 
   def self.map_items(customer_data)

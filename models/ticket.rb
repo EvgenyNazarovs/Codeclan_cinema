@@ -2,7 +2,7 @@ require_relative('../db/sql_runner')
 
 class Ticket
 
-  attr_accessor :customer_id, :film_id
+  attr_accessor :customer_id, :film_id, :screening_id
   attr_reader :id
 
   def initialize(options)
@@ -12,13 +12,44 @@ class Ticket
     @screening_id = options['screening_id']
   end
 
+  # CRUD methods
+
   def save
-    sql = "INSERT INTO tickets (customer_id, film_id, screening_id)
+    if screening_has_capacity?()
+      sql = "INSERT INTO tickets (customer_id, film_id, screening_id)
            VALUES ($1, $2, $3)
            RETURNING *"
+      values = [@customer_id, @film_id, @screening_id]
+      @id = SqlRunner.run(sql, values)[0]['id'].to_i
+      sell_ticket()
+    else return "SOLD OUT"
+    end
+  end
+
+  def self.all
+    sql = "SELECT * FROM tickets"
+    tickets = SqlRunner.run(sql)
+    return Ticket.map_items(tickets)
+  end
+
+  def update
+    sql = "UPDATE tickets
+           SET (customer_id, film_id, screening_id) = $1, $2, $3
+           WHERE id = $4"
     values = [@customer_id, @film_id, @screening_id]
-    @id = SqlRunner.run(sql, values)[0]['id'].to_i
-    buy_ticket()
+    SqlRunner.run(sql, values)
+  end
+
+  def self.delete_all
+    sql = "DELETE FROM tickets"
+    SqlRunner.run(sql)
+  end
+
+  def delete
+    sql = "DELETE FROM tickets
+           WHERE id = $1"
+    values = [@id]
+    SqlRunner.run(sql, values)
   end
 
   def film
@@ -34,30 +65,27 @@ class Ticket
     return film.price
   end
 
-  def customer_funds
-    result = customer()
-    return customer.funds
-  end
-
-  def buy_ticket
+  def sell_ticket
     customer = customer()
     price = price().to_i
     customer.funds = customer.funds.to_i - price
     customer.update
   end
 
-  def update_tickets_total
-    screening = screening()
-    if screening.capacity > screening.tickets_sold
-      screening.tickets_sold += 1
-      screening.update
-  end
+  # def update_tickets_total
+  #   screening = screening()
+  #   if screening.capacity.to_i > screening.tickets_sold
+  #     screening.tickets_sold += 1
+  #     screening.update
+  #   end
+  # end
 
   def screening
     sql = "SELECT * FROM screenings
            WHERE id = $1"
     values = [@screening_id]
-    return SqlRunner.run(sql, values)[0]
+    screening = SqlRunner.run(sql, values)[0]
+    return Screening.new(screening)
   end
 
   def customer
@@ -68,15 +96,10 @@ class Ticket
     return Customer.new(customer)
   end
 
-  def self.delete_all
-    sql = "DELETE FROM tickets"
-    SqlRunner.run(sql)
-  end
-
-  def self.all
-    sql = "SELECT * FROM tickets"
-    tickets = SqlRunner.run(sql)
-    return Ticket.map_items(tickets)
+  def screening_has_capacity?
+    screening = screening()
+    tickets = screening.number_of_tickets
+    return true if screening.capacity.to_i > tickets
   end
 
   def self.map_items(ticket_data)
