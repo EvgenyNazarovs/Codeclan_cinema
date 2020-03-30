@@ -10,7 +10,7 @@ Customer.delete_all
 Screening.delete_all
 
 film1 = Film.new({'title' => 'Blue Velvet', 'price' => 10})
-film2 = Film.new({'title' => 'The League of Gentlement Marathon', 'price' => 20})
+film2 = Film.new({'title' => 'The League of Gentlemen Marathon', 'price' => 20})
 film3 = Film.new({'title' => 'Inception', 'price' => 10})
 film4 = Film.new({'title' => 'Solaris', 'price' => 12})
 
@@ -29,12 +29,12 @@ customer2.name = 'Chris'
 customer2.update
 customer3.save
 
-screening1 = Screening.new({'film_id' => film1.id, 'showing_time' => '15:00', 'capacity' => 50})
-screening2 = Screening.new({'film_id' => film1.id, 'showing_time' => '18:00', 'capacity' => 50})
-screening3 = Screening.new({'film_id' => film1.id, 'showing_time' => '21:00', 'capacity' => 25})
-screening4 = Screening.new({'film_id' => film2.id, 'showing_time' => '19:30', 'capacity' => 3})
-screening5 = Screening.new({'film_id' => film3.id, 'showing_time' => '18:00', 'capacity' => 25})
-screening6 = Screening.new({'film_id' => film4.id, 'showing_time' => '20:00', 'capacity' => 25})
+screening1 = Screening.new({'film_id' => film1.id, 'showing_time' => '15:00', 'capacity' => 50, 'sold_tickets' => 24})
+screening2 = Screening.new({'film_id' => film1.id, 'showing_time' => '18:00', 'capacity' => 50, 'sold_tickets' => 0})
+screening3 = Screening.new({'film_id' => film1.id, 'showing_time' => '21:00', 'capacity' => 25, 'sold_tickets' => 0})
+screening4 = Screening.new({'film_id' => film2.id, 'showing_time' => '19:30', 'capacity' => 3, 'sold_tickets' => 2})
+screening5 = Screening.new({'film_id' => film3.id, 'showing_time' => '18:00', 'capacity' => 25, 'sold_tickets' => 0})
+screening6 = Screening.new({'film_id' => film4.id, 'showing_time' => '20:00', 'capacity' => 25, 'sold_tickets' => 0})
 
 screening1.save
 screening2.save

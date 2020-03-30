@@ -9,6 +9,7 @@ class Customer
     @id = options['id'].to_i if options['id']
     @name = options['name']
     @funds = options['funds']
+    @cinecard = options['cinecard']
   end
 
   # CRUD methods

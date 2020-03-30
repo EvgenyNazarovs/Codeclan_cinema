@@ -25,6 +25,7 @@ class Ticket
       values = [@customer_id, @film_id, @screening_id]
       @id = SqlRunner.run(sql, values)[0]['id'].to_i
       sell_ticket()
+      update_ticket_number()
     else return "SOLD OUT"
     end
   end
@@ -93,8 +94,12 @@ class Ticket
 
   def screening_has_capacity?
     screening = screening()
-    tickets = screening.number_of_tickets
-    return true if screening.capacity.to_i > tickets
+    return screening.has_capacity?()
+  end
+
+  def update_ticket_number
+    screening = screening()
+    screening.update_ticket_number
   end
 
   def self.map_items(ticket_data)

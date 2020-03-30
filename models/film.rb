@@ -27,6 +27,13 @@ class Film
     return Film.map_items(films)
   end
 
+  def self.all_sorted_a_to_z
+    sql = "SELECT * FROM films
+           ORDER BY title"
+    films = SqlRunner.run(sql)
+    return Film.map_items(films)
+  end
+
   def update
     sql = "UPDATE films
            SET (title, price) = ($1, $2)
